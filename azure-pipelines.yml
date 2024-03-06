@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: Infinum-Azure
+  Default
 
 steps:
 - task: Maven@3
