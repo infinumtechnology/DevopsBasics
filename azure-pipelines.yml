@@ -6,6 +6,9 @@
 trigger:
 - master
 
+pool:
+  vmImage: Infinum-Azure
+
 steps:
 - task: Maven@3
   inputs:
