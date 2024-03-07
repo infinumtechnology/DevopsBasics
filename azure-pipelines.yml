@@ -41,7 +41,11 @@ steps:
 
     Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath
     Expand-Archive -Path $downloadPath -DestinationPath $extractPath
-  displayName: 'Download and Extract Tomcat'
+
+    # Start Tomcat on port 9080
+    $catalinaPath = Join-Path $extractPath "apache-tomcat-$tomcatVersion/bin/catalina.bat"
+    Start-Process -FilePath $catalinaPath -ArgumentList "start -Dcatalina.http.port=9080"
+  displayName: 'Download, Extract, and Start Tomcat'
 
 
 
