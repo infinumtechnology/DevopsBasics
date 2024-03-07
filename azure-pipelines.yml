@@ -34,9 +34,13 @@ steps:
     $tomcatVersion = "9"
     $downloadUrl = "https://downloads.apache.org/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.zip"
     $downloadPath = "$(Build.ArtifactStagingDirectory)/tomcat/tomcat.zip"
+    $extractPath = "$(Agent.TempDirectory)/Tomcat"
+
+    # Create the target directory if it doesn't exist
+    New-Item -ItemType Directory -Force -Path $(Split-Path $downloadPath)
 
     Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath
-    Expand-Archive -Path $downloadPath -DestinationPath $(Agent.TempDirectory)/Tomcat
+    Expand-Archive -Path $downloadPath -DestinationPath $extractPath
   displayName: 'Download and Extract Tomcat'
 
 
