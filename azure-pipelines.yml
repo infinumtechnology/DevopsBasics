@@ -43,8 +43,9 @@ steps:
     Expand-Archive -Path $downloadPath -DestinationPath $extractPath
 
     # Start Tomcat on port 9080
-    $catalinaPath = Join-Path $extractPath "apache-tomcat-$tomcatVersion/bin/catalina.bat"
-    Start-Process -FilePath $catalinaPath -ArgumentList "start -Dcatalina.http.port=9080"
+    $catalinaPath = Join-Path $extractPath "apache-tomcat-$tomcatVersion/bin"
+    Set-Location -Path $catalinaPath
+    Start-Process -FilePath ".\catalina.bat" -ArgumentList "run -Dcatalina.http.port=9080"
   displayName: 'Download, Extract, and Start Tomcat'
 
 
