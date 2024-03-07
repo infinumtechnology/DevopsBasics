@@ -43,7 +43,7 @@ steps:
     Expand-Archive -Path $downloadPath -DestinationPath $extractPath
 
     # Set Tomcat bin directory path
-    $catalinaBinPath = Join-Path $extractPath "apache-tomcat-$tomcatVersion/bin"
+    $catalinaBinPath = Join-Path $extractPath "apache-tomcat-9.0.86/bin"
 
     Write-Host "Checking if Tomcat bin directory exists: $catalinaBinPath"
 
