@@ -30,37 +30,3 @@ steps:
     ArtifactName: 'warFile'
     publishLocation: 'Container'
 
-- powershell: |
-    $tomcatVersion = "9"
-    $downloadUrl = "https://downloads.apache.org/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.zip"
-    $downloadPath = "$(Build.ArtifactStagingDirectory)/tomcat/tomcat.zip"
-    $extractPath = "$(Agent.TempDirectory)/Tomcat"
-
-    # Create the target directory if it doesn't exist
-    New-Item -ItemType Directory -Force -Path $(Split-Path $downloadPath)
-
-    Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath
-    Expand-Archive -Path $downloadPath -DestinationPath $extractPath
-
-    # Set Tomcat bin directory path
-    $catalinaBinPath = Join-Path $extractPath "apache-tomcat-9.0.86/bin"
-
-    Write-Host "Checking if Tomcat bin directory exists: $catalinaBinPath"
-
-    # Ensure the path exists before changing location
-    if (Test-Path $catalinaBinPath -PathType Container) {
-        Set-Location -Path $catalinaBinPath
-
-        # Start Tomcat on port 9080
-        $catalinaBatPath = Join-Path $catalinaBinPath "catalina.bat"
-        $arguments = "run"
-
-        Write-Host "Executing: $catalinaBatPath $arguments"
-
-        # Start Tomcat with enhanced debugging
-        Start-Process -FilePath $catalinaBatPath -ArgumentList $arguments -NoNewWindow -Wait
-    } else {
-        Write-Host "Error: Tomcat bin directory not found."
-        exit 1
-    }
-  displayName: 'Download, Extract, and Start Tomcat'
