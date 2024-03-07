@@ -39,7 +39,3 @@ steps:
     Expand-Archive -Path $downloadPath -DestinationPath $(Agent.TempDirectory)/Tomcat
   displayName: 'Download and Extract Tomcat'
 
-- script: |
-    $tomcatHome = "$(Agent.TempDirectory)/Tomcat/apache-tomcat-<version>"
-    Start-Process -FilePath "$tomcatHome/bin/startup.bat" -NoNewWindow -Wait
-  displayName: 'Start Tomcat'
