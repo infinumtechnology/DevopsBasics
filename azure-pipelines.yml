@@ -30,7 +30,7 @@ steps:
     ArtifactName: 'warFile'
     publishLocation: 'Container'
 
-- script: |
+- powershell: |
     $tomcatVersion = "9"
     $downloadUrl = "https://downloads.apache.org/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.zip"
     $downloadPath = "$(Build.ArtifactStagingDirectory)/tomcat/tomcat.zip"
@@ -38,5 +38,6 @@ steps:
     Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath
     Expand-Archive -Path $downloadPath -DestinationPath $(Agent.TempDirectory)/Tomcat
   displayName: 'Download and Extract Tomcat'
+
 
 
