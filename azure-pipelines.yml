@@ -45,6 +45,8 @@ steps:
     # Set Tomcat bin directory path
     $catalinaBinPath = Join-Path $extractPath "apache-tomcat-$tomcatVersion\bin"
 
+    Write-Host "Checking if Tomcat bin directory exists: $catalinaBinPath"
+
     # Ensure the path exists before changing location
     if (Test-Path $catalinaBinPath -PathType Container) {
         Set-Location -Path $catalinaBinPath
@@ -55,6 +57,7 @@ steps:
         exit 1
     }
   displayName: 'Download, Extract, and Start Tomcat'
+
 
 
 
