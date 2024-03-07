@@ -50,8 +50,15 @@ steps:
     # Ensure the path exists before changing location
     if (Test-Path $catalinaBinPath -PathType Container) {
         Set-Location -Path $catalinaBinPath
+
         # Start Tomcat on port 9080
-        Start-Process -FilePath ".\catalina.bat" -ArgumentList "run", "-Dcatalina.http.port=9080" -NoNewWindow -Wait
+        $catalinaBatPath = Join-Path $catalinaBinPath "catalina.bat"
+        $arguments = "run", "-Dcatalina.http.port=9080"
+
+        Write-Host "Executing: $catalinaBatPath $arguments"
+
+        # Start Tomcat with enhanced debugging
+        Start-Process -FilePath $catalinaBatPath -ArgumentList $arguments -NoNewWindow -Wait
     } else {
         Write-Host "Error: Tomcat bin directory not found."
         exit 1
