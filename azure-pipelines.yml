@@ -34,7 +34,7 @@ steps:
     $tomcatVersion = "9"
     $downloadUrl = "https://downloads.apache.org/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.zip"
     $downloadPath = "$(Build.ArtifactStagingDirectory)/tomcat/tomcat.zip"
-    $extractPath = "$(Agent.TempDirectory)/Tomcat"
+    $extractPath = "$(Agent.TempDirectory)/Tomcat/apache-tomcat-$tomcatVersion"
 
     # Create the target directory if it doesn't exist
     New-Item -ItemType Directory -Force -Path $(Split-Path $downloadPath)
@@ -43,7 +43,7 @@ steps:
     Expand-Archive -Path $downloadPath -DestinationPath $extractPath
 
     # Set Tomcat bin directory path
-    $catalinaBinPath = Join-Path $extractPath "apache-tomcat-$tomcatVersion\bin"
+    $catalinaBinPath = Join-Path $extractPath "bin"
 
     Write-Host "Checking if Tomcat bin directory exists: $catalinaBinPath"
 
@@ -57,8 +57,5 @@ steps:
         exit 1
     }
   displayName: 'Download, Extract, and Start Tomcat'
-
-
-
 
 
