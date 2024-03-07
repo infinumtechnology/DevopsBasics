@@ -42,11 +42,20 @@ steps:
     Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath
     Expand-Archive -Path $downloadPath -DestinationPath $extractPath
 
-    # Start Tomcat on port 9080
-    $catalinaPath = Join-Path $extractPath "apache-tomcat-$tomcatVersion/bin"
-    Set-Location -Path $catalinaPath
-    Start-Process -FilePath ".\catalina.bat" -ArgumentList "run -Dcatalina.http.port=9080"
+    # Set Tomcat bin directory path
+    $catalinaBinPath = Join-Path $extractPath "apache-tomcat-$tomcatVersion\bin"
+
+    # Ensure the path exists before changing location
+    if (Test-Path $catalinaBinPath -PathType Container) {
+        Set-Location -Path $catalinaBinPath
+        # Start Tomcat on port 9080
+        Start-Process -FilePath ".\catalina.bat" -ArgumentList "run", "-Dcatalina.http.port=9080" -NoNewWindow -Wait
+    } else {
+        Write-Host "Error: Tomcat bin directory not found."
+        exit 1
+    }
   displayName: 'Download, Extract, and Start Tomcat'
+
 
 
 
