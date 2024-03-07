@@ -1,3 +1,8 @@
+# Maven
+# Build your Java project and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
 trigger:
 - master
 
@@ -5,25 +10,6 @@ pool:
   Default
 
 steps:
-- task: DownloadBuildArtifacts@0
-  inputs:
-    buildType: 'current'
-    artifactName: 'tomcat-artifact'
-    downloadPath: '$(Build.ArtifactStagingDirectory)/tomcat'
-
-- task: ExtractFiles@1
-  inputs:
-    archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/tomcat/*.zip'
-    destinationFolder: '$(Agent.TempDirectory)/Tomcat'
-
-- script: |
-    echo "##vso[task.setvariable variable=CATALINA_HOME;isOutput=true]$(Agent.TempDirectory)/Tomcat/apache-tomcat-<version>"
-    echo "##vso[task.setvariable variable=CATALINA_BASE;isOutput=true]$(Agent.TempDirectory)/Tomcat/apache-tomcat-<version>"
-  displayName: 'Set Tomcat Environment Variables'
-
-- script: '$(CATALINA_HOME)/bin/startup.bat'
-  displayName: 'Start Tomcat'
-
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
@@ -34,14 +20,26 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
-
 - task: CopyFiles@2
   inputs:
     Contents: '**/*.war'
     TargetFolder: '$(build.artifactstagingdirectory)'
-
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'warFile'
     publishLocation: 'Container'
+
+- script: |
+    $tomcatVersion = "9"
+    $downloadUrl = "https://downloads.apache.org/tomcat/tomcat-$tomcatVersion/v$tomcatVersion.zip"
+    $downloadPath = "$(Build.ArtifactStagingDirectory)/tomcat/tomcat.zip"
+
+    Invoke-WebRequest -Uri $downloadUrl -OutFile $downloadPath
+    Expand-Archive -Path $downloadPath -DestinationPath $(Agent.TempDirectory)/Tomcat
+  displayName: 'Download and Extract Tomcat'
+
+- script: |
+    $tomcatHome = "$(Agent.TempDirectory)/Tomcat/apache-tomcat-<version>"
+    Start-Process -FilePath "$tomcatHome/bin/startup.bat" -NoNewWindow -Wait
+  displayName: 'Start Tomcat'
