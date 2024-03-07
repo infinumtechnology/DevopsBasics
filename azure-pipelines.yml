@@ -53,7 +53,7 @@ steps:
 
         # Start Tomcat on port 9080
         $catalinaBatPath = Join-Path $catalinaBinPath "catalina.bat"
-        $arguments = "run", "-Dcatalina.http.port=9080"
+        $arguments = "run"
 
         Write-Host "Executing: $catalinaBatPath $arguments"
 
